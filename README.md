@@ -122,7 +122,21 @@ The server will be available at `http://localhost:3000`
 
 ## Testing
 
-You can test the endpoints using curl or any HTTP client:
+### Running Tests
+
+The project includes automated tests using Jest and Supertest:
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+### Manual Testing
+
+You can also test the endpoints using curl or any HTTP client:
 
 ```bash
 # Get all countries
@@ -140,11 +154,15 @@ curl http://localhost:3000/brazil/brasilia
 ```
 countries/
 ├── index.js              # Main server file
+├── index.test.js         # Test suite
 ├── countries-data.js     # Countries and cities data
 ├── package.json          # Dependencies and scripts
 ├── Dockerfile            # Docker image configuration
 ├── docker-compose.yml    # Docker Compose configuration
 ├── .dockerignore         # Docker ignore rules
+├── .github/
+│   └── workflows/
+│       └── ci.yml        # GitHub Actions CI workflow
 ├── .env                  # Environment variables (not in git)
 ├── .gitignore            # Git ignore rules
 └── README.md             # This file
@@ -160,4 +178,15 @@ countries/
 - Express.js
 - dotenv
 - Docker (for containerization)
+- Jest (for testing)
+- Supertest (for API testing)
+
+## CI/CD
+
+The project includes a GitHub Actions workflow (`.github/workflows/ci.yml`) that:
+- Runs tests on every push and pull request
+- Tests against Node.js 20.x
+- Builds the Docker image to verify the containerization setup
+
+Tests must pass before code can be merged or deployed.
 

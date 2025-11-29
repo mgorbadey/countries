@@ -56,12 +56,18 @@ app.get('/:countryName/:cityName', (req, res) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Available endpoints:`);
-  console.log(`  GET /country - List all countries`);
-  console.log(`  GET /:countryName - Get country information`);
-  console.log(`  GET /:countryName/:cityName - Get city information`);
-});
+// Export app for testing
+export default app;
+
+// Start server only if this file is run directly (not imported in tests)
+// Skip starting server if running in test environment
+if (process.env.NODE_ENV !== 'test' && !process.env.JEST_WORKER_ID) {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Available endpoints:`);
+    console.log(`  GET /country - List all countries`);
+    console.log(`  GET /:countryName - Get country information`);
+    console.log(`  GET /:countryName/:cityName - Get city information`);
+  });
+}
 
