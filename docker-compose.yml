@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  countries-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: countries-api
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/country"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+

@@ -62,25 +62,57 @@ GET /brazil/brasilia
 }
 ```
 
-## Local Setup
+## Setup
+
+### Option 1: Docker (Recommended)
+
+The easiest way to run the server is using Docker Compose:
+
+1. **Build and start the container:**
+   ```bash
+   docker-compose up --build
+   ```
+
+2. **Or run in detached mode:**
+   ```bash
+   docker-compose up -d --build
+   ```
+
+3. **Stop the container:**
+   ```bash
+   docker-compose down
+   ```
+
+**Using Docker directly:**
+```bash
+# Build the image
+docker build -t countries-api .
+
+# Run the container
+docker run -p 3000:3000 countries-api
+```
+
+The server will be available at `http://localhost:3000`
+
+### Option 2: Local Development
 
 1. **Install dependencies:**
    ```bash
    npm install
    ```
 
-2. **Configure environment variables:**
-   - Copy `.env.example` to `.env` (already done)
-   - Edit `.env` if you want to change the port (default: 3000)
+2. **Configure environment variables (optional):**
+   - Create a `.env` file if you want to change the port
+   - Default port is 3000
 
 3. **Start the server:**
    ```bash
-   node index.js
+   npm start
    ```
 
-   Or use npm script:
+   Or directly:
    ```bash
-   npm start
+   node index.js
    ```
 
 4. **Server will run on:**
@@ -109,11 +141,13 @@ curl http://localhost:3000/brazil/brasilia
 countries/
 ├── index.js              # Main server file
 ├── countries-data.js     # Countries and cities data
-├── package.json         # Dependencies and scripts
-├── .env                 # Environment variables (not in git)
-├── .env.example         # Example environment file
-├── .gitignore           # Git ignore rules
-└── README.md            # This file
+├── package.json          # Dependencies and scripts
+├── Dockerfile            # Docker image configuration
+├── docker-compose.yml    # Docker Compose configuration
+├── .dockerignore         # Docker ignore rules
+├── .env                  # Environment variables (not in git)
+├── .gitignore            # Git ignore rules
+└── README.md             # This file
 ```
 
 ## Environment Variables
@@ -125,4 +159,5 @@ countries/
 - Node.js
 - Express.js
 - dotenv
+- Docker (for containerization)
 
