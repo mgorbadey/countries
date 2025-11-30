@@ -26,11 +26,14 @@ jobs:
 
     - name: Install dependencies
       run: npm ci
+      env:
+        NODE_ENV: development
 
     - name: Run tests
       run: npm test
       env:
         NODE_ENV: test
+        NODE_OPTIONS: --experimental-vm-modules
 
     - name: Build Docker image
       run: docker build -t countries-api:test .
