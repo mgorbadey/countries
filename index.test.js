@@ -52,7 +52,7 @@ describe('Countries API', () => {
   describe('GET /:countryName/:cityName', () => {
     it('should return city information for a valid city', async () => {
       const response = await request(app)
-        .get('/brazil/brasília')
+        .get('/brazil/brasilia')
         .expect(200)
         .expect('Content-Type', /json/);
 
@@ -82,7 +82,7 @@ describe('Countries API', () => {
 
     it('should be case-insensitive for both country and city', async () => {
       const response = await request(app)
-        .get('/BRAZIL/BRASÍLIA')
+        .get('/BRAZIL/BRASILIA')
         .expect(200)
         .expect('Content-Type', /json/);
 

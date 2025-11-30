@@ -2,12 +2,12 @@
 const countriesData = [
   {
     name: 'Brazil',
-    capital: 'Brasília',
-    main_cities: ['Brasília', 'Rio de Janeiro', 'São Paulo'],
+    capital: 'Brasilia',
+    main_cities: ['Brasilia', 'Rio de Janeiro', 'São Paulo'],
     population: '215 million',
     area: '8.5 million sq km',
     cities: [
-      { name: 'Brasília', population: '3 million', area: '5,802 sq km' },
+      { name: 'Brasilia', population: '3 million', area: '5,802 sq km' },
       { name: 'Rio de Janeiro', population: '6.7 million', area: '1,221 sq km' },
       { name: 'São Paulo', population: '12.3 million', area: '1,521 sq km' }
     ]

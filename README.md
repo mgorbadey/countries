@@ -36,8 +36,8 @@ GET /brazil
 **Example Response:**
 ```json
 {
-  "capital": "Brasília",
-  "main_cities": ["Brasília", "Rio de Janeiro", "São Paulo"],
+  "capital": "Brasilia",
+  "main_cities": ["Brasilia", "Rio de Janeiro", "São Paulo"],
   "population": "215 million",
   "area": "8.5 million sq km"
 }
