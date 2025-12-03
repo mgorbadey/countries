@@ -2,6 +2,9 @@
 
 A RESTful Node.js Express server that provides information about countries and their cities.
 
+Now available in web!
+Just try to sent GET request there: 18.231.212.124:3000/country
+
 ## Features
 
 - Get a list of all available countries
