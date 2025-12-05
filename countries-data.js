@@ -1,6 +1,18 @@
 // Countries data with capitals, main cities, population, and area
 const countriesData = [
   {
+    name: 'DefaultCountry',
+    capital: 'DefaultCapital',
+    main_cities: ['DefaultCity1', 'DefaultCity2', 'DefaultCity3'],
+    population: '1 million',
+    area: '1 million sq km',
+    cities: [
+      { name: 'DefaultCity1', population: '1 million', area: '1000 sq km' },
+      { name: 'DefaultCity2', population: '2 million', area: '2000 sq km' },
+      { name: 'DefaultCity3', population: '3 million', area: '3000 sq km' }
+    ]
+  },
+  {
     name: 'Brazil',
     capital: 'Brasilia',
     main_cities: ['Brasilia', 'Rio de Janeiro', 'São Paulo'],
