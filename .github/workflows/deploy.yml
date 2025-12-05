@@ -43,8 +43,9 @@ jobs:
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
             | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
 
-          # Kill any process holding port 3000
-          sudo lsof -t -i:3000 | sudo xargs -r kill -9 || true
+          # Stop and remove any container using port 3000
+          docker ps -q --filter "publish=3000" | xargs -r docker stop || true
+          docker ps -aq --filter "publish=3000" | xargs -r docker rm || true
 
           # Clean networks
           docker network prune -f || true
