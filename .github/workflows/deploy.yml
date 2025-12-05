@@ -24,7 +24,7 @@ jobs:
         aws ecr get-login-password --region $AWS_REGION \
         | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
 
-    - name: Build and Push Image (multi-arch)
+    - name: Build and Push Image (amd64)
       run: |
         docker buildx create --use
         docker buildx build \
@@ -39,9 +39,24 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
+          # Login to ECR on EC2
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
+            | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+
+          # Kill any process holding port 3000
+          sudo lsof -t -i:3000 | sudo xargs -r kill -9 || true
+
+          # Clean networks
+          docker network prune -f || true
+
+          # Pull latest image
           docker pull ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
+
+          # Stop & remove old container
           docker stop node-server || true
           docker rm node-server || true
+
+          # Run new container
           docker run -d \
             --name node-server \
             -p 3000:3000 \
