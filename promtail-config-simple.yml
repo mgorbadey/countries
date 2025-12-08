@@ -1,0 +1,56 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_service']
+        target_label: 'service'
+      - source_labels: ['__meta_docker_container_log_stream']
+        target_label: 'stream'
+    pipeline_stages:
+      # Parse Docker JSON to extract log content
+      - json:
+          expressions:
+            log: log
+            stream: stream
+      # Extract Winston JSON from log field using regex
+      - regex:
+          expression: '(?P<winston_json>.*)'
+          source: log
+      # Set the line to Winston JSON
+      - output:
+          source: winston_json
+      # Parse Winston JSON
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            service: service
+            message: message
+      # Set labels
+      - labels:
+          level:
+          service:
+          stream:
+      # Parse timestamp
+      - timestamp:
+          source: timestamp
+          format: RFC3339Nano
+      # Output message
+      - output:
+          source: message
+

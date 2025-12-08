@@ -1,9 +1,43 @@
 import 'dotenv/config';
 import express from 'express';
+import winston from 'winston';
+import expressWinston from 'express-winston';
 import countriesData from './countries-data.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Configure Winston logger for structured JSON logging (Grafana/Loki compatible)
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  defaultMeta: { service: 'countries-api' },
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.json()
+    })
+  ]
+});
+
+// Request logging middleware - logs all incoming requests
+app.use(expressWinston.logger({
+  winstonInstance: logger,
+  meta: true,
+  msg: 'HTTP {{req.method}} {{req.url}}',
+  expressFormat: false,
+  colorize: false,
+  requestWhitelist: ['url', 'method', 'headers', 'query', 'body', 'ip'],
+  responseWhitelist: ['statusCode', 'body'],
+  bodyBlacklist: ['password', 'token', 'secret'],
+  ignoreRoute: (req, res) => {
+    // Optionally ignore health checks or other routes
+    return false;
+  }
+}));
 
 // Middleware
 app.use(express.json());
@@ -59,15 +93,27 @@ app.get('/:countryName/:cityName', (req, res) => {
 // Export app for testing
 export default app;
 
+// Error logging middleware
+app.use(expressWinston.errorLogger({
+  winstonInstance: logger
+}));
+
 // Start server only if this file is run directly (not imported in tests)
 // Skip starting server if running in test environment
 if (process.env.NODE_ENV !== 'test' && !process.env.JEST_WORKER_ID) {
   app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-    console.log(`Available endpoints:`);
-    console.log(`  GET /country - List all countries`);
-    console.log(`  GET /:countryName - Get country information`);
-    console.log(`  GET /:countryName/:cityName - Get city information`);
+    logger.info({
+      message: 'Server started',
+      port: PORT,
+      endpoints: [
+        'GET /country - List all countries',
+        'GET /:countryName - Get country information',
+        'GET /:countryName/:cityName - Get city information'
+      ]
+    });
   });
 }
+
+// Export logger for use in other modules if needed
+export { logger };
 
